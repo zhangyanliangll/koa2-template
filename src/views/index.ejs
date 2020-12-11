@@ -1,0 +1,51 @@
+<!-- index 首页-->
+<%- include('layout/header',{ title:'首页'}) %>
+
+<!-- <h1><%= title %></h1>
+<div>
+  姓名：
+  <input type="text" placeholder="请输入姓名" />
+</div>
+<div>
+  密码：
+  <input type="text" placeholder="请输入密码" />
+</div> -->
+<div><button id="token">登录</button></div>
+<div><button id="add">提交</button></div>
+
+<!-- 底部 -->
+<%- include('layout/footer') %>
+
+<script>
+  !$(document).ready(function () {
+    $("#token").click(function () {
+      $.post(
+        "/admin/login",
+
+        {
+          mobile: 19942142065,
+        },
+        function (data, textStatus, jqXHR) {
+          console.log("ajkx：ok");
+          sessionStorage.setItem("token", data.token);
+        }
+      );
+    });
+
+    $("#add").click(function () {
+      let token = sessionStorage.getItem("token");
+      $.ajax({
+        type: "post",
+        url: "/admin/sendmsg",
+        data: "data",
+        dataType: "dataType",
+        beforeSend: function (xhr) {
+          xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+        },
+        success: function (response) {
+          console.log("ajkx：ok");
+        },
+      });
+    });
+  });
+</script>
