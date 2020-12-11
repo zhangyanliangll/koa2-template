@@ -18,34 +18,36 @@
 
 <script>
   !$(document).ready(function () {
-    $("#token").click(function () {
-      $.post(
-        "/admin/login",
+    $("#token").click(async () => {
+      // $.post(
+      //   "/admin/login",
 
-        {
-          mobile: 19942142065,
-        },
-        function (data, textStatus, jqXHR) {
-          console.log("ajkx：ok");
-          sessionStorage.setItem("token", data.token);
-        }
-      );
+      //   {
+      //     mobile: 19942142065,
+      //   },
+      //   function (data, textStatus, jqXHR) {
+      //     console.log("ajkx：ok");
+      //     sessionStorage.setItem("token", data.token);
+      //   }
+      // );
+      await $post("/admin/login", { mobile: 19942142065 });
     });
 
-    $("#add").click(function () {
-      let token = sessionStorage.getItem("token");
-      $.ajax({
-        type: "post",
-        url: "/admin/sendmsg",
-        data: "data",
-        dataType: "dataType",
-        beforeSend: function (xhr) {
-          xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-        },
-        success: function (response) {
-          console.log("ajkx：ok");
-        },
-      });
+    $("#add").click(async () => {
+      // let token = sessionStorage.getItem("token");
+      await $post("/admin/sendmsg");
+      // $.ajax({
+      //   type: "post",
+      //   url: "/admin/sendmsg",
+      //   data: "data",
+      //   dataType: "dataType",
+      //   beforeSend: function (xhr) {
+      //     xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      //   },
+      //   success: function (response) {
+      //     console.log("ajkx：ok");
+      //   },
+      // });
     });
   });
 </script>
