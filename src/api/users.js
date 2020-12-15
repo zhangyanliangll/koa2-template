@@ -32,8 +32,8 @@ router.post("/login", function (ctx, next) {
 });
 
 router.post("/sendmsg", async (ctx, next) => {
-  let data = await serviceHttps(ctx, next);
-  console.log( ctx.request.header.authorization, "authorizationauthorizationauthorization");
+  let data = await serviceHttps(ctx,'127.0.0.1');
+  console.log(data, "-----------////////////");
   ctx.body = {
     code: 200,
     msg: "请求成功",

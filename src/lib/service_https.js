@@ -7,11 +7,11 @@ const qs = require("querystring");
 const { Third_Party_Service_Conf } = require("../config/db");
 /**
  *
- * @param { Object } ctx
- * @param { Object } next
- * @param { Object } body { method:'' , hostname:'' , params:{'参数'}...}
+ * @param { Object } ctx 必填
+ * @param { String } domain_name  域名
+ * @param { Object } body { path:'路径', method:'请求方式' , hostname:'域名' , params: { '参数'  } , port:'端口'} 需要可进行覆盖参数
  */
-function serviceHttps(ctx, next, body = {}) {
+function serviceHttps(ctx, domain_name, body = {}) {
   body.params = body.params || ctx.request.body; // post请求参数
   ctx.method = body.method || ctx.method; // 请求类型
   //   get请求
@@ -21,18 +21,21 @@ function serviceHttps(ctx, next, body = {}) {
   const params = qs.stringify(body.params);
   //   格式化请求头
   let body_request = {
-    hostname: Third_Party_Service_Conf.hostname,
-    path: `${ctx.url}?` + params,
-    port: Third_Party_Service_Conf.port,
-    method: ctx.method,
+    hostname: domain_name || Third_Party_Service_Conf.hostname, // 域名
+    // path: `${ctx.url}?` + params, //路径
+    path: `${ctx.url}?`, //路径
+    // port: Third_Party_Service_Conf.port, //端口
+    method: ctx.method, //请求方式
     json: true, //设置返回的数据为json
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "Content-Length": Buffer.byteLength(params),
     },
   };
+  if (ctx.method !== "POST") {
+    body_request.path = body_request.path + params;
+  }
   body_request = Object.assign(body_request, body);
-  console.log(body_request.method, "---------", params, "params----------");
   //   发送请求
   return new Promise((resolve, reject) => {
     let req = http.request(body_request, (res) => {
